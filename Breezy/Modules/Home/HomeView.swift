@@ -14,10 +14,9 @@ struct HomeView: View {
                         .multilineTextAlignment(.center)
                         .padding()
                 } else {
-                    List(viewModel.forecast) { day in
-                        HStack {
-                            weatherSpecification(day: day)
-                            weatherImage(day: day)
+                    ScrollView {
+                        ForEach(viewModel.forecast) { day in
+                            dayItem(day: day)
                         }
                     }
                 }
@@ -27,11 +26,27 @@ struct HomeView: View {
     }
     
     @ViewBuilder
+    private func dayItem(day: ForecastDay) -> some View {
+        HStack {
+            weatherSpecification(day: day)
+            weatherImage(day: day)
+        }
+        .padding()
+        .background(.white)
+        .clipShape(RoundedRectangle(cornerRadius: 10))
+        .padding(.horizontal)
+        .padding(.vertical, 5)
+        .shadow(color: .gray, radius: 10, x: 5, y: 5)
+    }
+    
+    @ViewBuilder
     private func weatherSpecification(day: ForecastDay) -> some View {
         VStack(alignment: .leading) {
             Text(day.date)
                 .font(.headline)
+            
             Text(day.day.condition.text)
+            
             Text("🌡 \(day.day.avgtempC, specifier: "%.1f")°C, 💧 \(day.day.avghumidity, specifier: "%.0f")%, 💨 \(day.day.maxwindKph, specifier: "%.0f") km/h")
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .lineLimit(1)
@@ -51,7 +66,7 @@ struct HomeView: View {
     }
     
     private func title() -> String {
-        viewModel.city.isEmpty ? "Defining a city..." : "Weather in \(viewModel.city)"
+        viewModel.city.isEmpty ? "Defining a city..." : "\(viewModel.city)"
     }
 }
 

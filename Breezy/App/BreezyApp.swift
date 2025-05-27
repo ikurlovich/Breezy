@@ -4,7 +4,7 @@ import SwiftUI
 struct BreezyApp: App {
     var body: some Scene {
         WindowGroup {
-            HomeView()
+            CoordinatorView()
                 .preferredColorScheme(.light)
         }
     }
